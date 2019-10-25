@@ -1,5 +1,6 @@
 import argparse
 import pandas as pd
+import numpy as np
 
 import math
 
@@ -38,7 +39,8 @@ if __name__ == '__main__':
                 '25%': [],
                 '50%': [],
                 '75%': [],
-                'max': []}
+                'max': [],
+                 'n_unique': []}
     for c, d in zip(df.dtypes.index, df.dtypes):
         d = str(d)
         if d.startswith('int') or d.startswith("float"):
@@ -66,5 +68,6 @@ if __name__ == '__main__':
             statistics['50%'].append(f_50)
             statistics['75%'].append(f_75)
             statistics['max'].append(f_max)
+            statistics['n_unique'].append(len(np.unique(feature)))
 
     print(pd.DataFrame(statistics, index=columns).T)
