@@ -56,4 +56,4 @@ if __name__ == '__main__':
     y_pred = lr.predict(X)
     pred_df = pd.DataFrame(y_pred, index=df.index, columns=[target])
     pred_df.to_csv(args.filename)
-    print("Predictions saved in", args.filename)
+    print("Predictions are saved in", args.filename)

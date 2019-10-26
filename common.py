@@ -56,7 +56,7 @@ class LogisticRegression:
         if self.verbose:
             print(f"# of targets: {len(self.unique_targets)}")
         if 'values' in dir(X):
-            X = X.values
+            X = X.values  # Convert pandas DataFrame into np.ndarray
         n, m = X.shape
         batch_size = n if batch_size == -1 else batch_size
         n_batches = int(n // batch_size)
