@@ -15,10 +15,11 @@ def normalize(X):
 def softmax(X):
     return np.exp(X) / np.exp(X).sum(axis=1).reshape(-1, 1)
 
-def impute(X, strategy='mean'):
-    imp_vec = None
+def impute(X, strategy='mean', vec=None):
+    imp_vec = vec
     if strategy == 'mean':
-        imp_vec = np.nanmean(X, axis=0)
+        if imp_vec is None:
+            imp_vec = np.nanmean(X, axis=0)
     else:
         raise ValueError(f'Unrecognized strategy: {strategy}')
     
@@ -110,3 +111,6 @@ class LogisticRegression:
         w = np.random.randn(n_features) * scale
         b = np.zeros(1)
         return w, b
+
+def accuracy(y_true, y_pred):
+    return ((y_true.values == y_pred)).sum() / len(y_true)

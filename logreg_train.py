@@ -13,9 +13,10 @@ if __name__ == '__main__':
     parser.add_argument('--all-features', '-a', help='use all features instead of the selected ones', default=False, action='store_true')
     parser.add_argument('--seed', '-s', help='random seed', default=0)
     parser.add_argument('--verbose', '-v', default=False, action='store_true', help='verbose mode')
-    parser.add_argument('--epochs', '-e', help='# of epochs', default=3)
+    parser.add_argument('--epochs', '-e', help='# of epochs', default=10)
     parser.add_argument('--batch-size', '-b', help='Batch size [1 for SGD, <n for mini-batch GD]', default=32)
     parser.add_argument('--save-path', '-p', default='weights.pcl', help="File name to save weights")
+    parser.add_argument('--impute', '-i', default=False, action='store_true', help='Impute NaN values with mean')
 
     args = parser.parse_args()
     if type(args.lr) is str:
@@ -56,8 +57,11 @@ if __name__ == '__main__':
     X = df[courses].values
     y = df[target]
     
-    X, imp_vec = impute(X)
-    
+    if args.impute:
+        X, imp_vec = impute(X)
+    else:
+        imp_vec = np.nanmean(X, axis=0)
+
     if args.normalize:
         Xv, X_mean, X_std = normalize(X)
     else:
@@ -66,7 +70,9 @@ if __name__ == '__main__':
     lr = LogisticRegression(verbose=args.verbose, seed=args.seed)
     lr.fit(Xv, y, batch_size=args.batch_size, n_epochs=args.epochs)
     
+    print("Accuracy on train dataset:", accuracy(y, lr.predict(Xv)))
     store_obj = {'model': lr, 'imp': imp_vec, 'X_mean': X_mean, 'X_std': X_std}
     with open(args.save_path, 'wb') as f:
         print(f"Model is saved in {args.save_path}")
         pickle.dump(store_obj, f)
+    
