@@ -67,7 +67,7 @@ if __name__ == '__main__':
     else:
         Xv, X_mean, X_std = X, X.mean(axis=0), X.std(axis=0)
     
-    lr = LogisticRegression(verbose=args.verbose, seed=args.seed)
+    lr = LogisticRegression(verbose=args.verbose, seed=args.seed, lr=args.lr)
     lr.fit(Xv, y, batch_size=args.batch_size, n_epochs=args.epochs)
     
     print("Accuracy on train dataset:", accuracy(y, lr.predict(Xv)))
